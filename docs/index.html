@@ -40,9 +40,19 @@
           <div class="eyebrow">Research project · 2026</div>
           <h1>Patient-Aware Explainable Machine Learning for <span>Breast MRI Radiomics</span></h1>
           <p class="hero-lead">
-            A systematic evaluation of single- and multiparametric MRI radiomic feature fusion for
-            preoperative classification of benign and malignant breast lesions, with strict patient-level
-            validation and feature-level explainability.
+          This project develops a patient-aware machine-learning framework for
+          classifying benign and malignant breast lesions using quantitative MRI
+          radiomic features. The study investigates whether combining multiple MRI
+          feature sources improves classification performance or whether selective
+          feature integration provides more reliable models in high-dimensional,
+          small-cohort settings.
+
+          Five MRI-derived radiomic sources were systematically evaluated through all
+          31 possible source configurations, while comparing feature-selection
+          strategies, class-balancing approaches, and ten machine-learning classifiers.
+          To improve the reliability of performance estimation, model development used
+          patient-aware nested cross-validation, ensuring that all regions from the
+          same patient remained within the same validation partition.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#results">Explore results</a>
@@ -57,9 +67,20 @@
 
         <div class="hero-panel reveal delay-1">
           <div class="metric-row">
-            <div><strong>31</strong><span>MRI source configurations</span></div>
-            <div><strong>10</strong><span>ML classifiers</span></div>
-            <div><strong>0.836</strong><span>Best mean ROC-AUC</span></div>
+            <div>
+              <strong>31</strong>
+              <span>MRI feature-source configurations evaluated</span>
+            </div>
+
+            <div>
+              <strong>10</strong>
+              <span>Machine-learning classifiers compared</span>
+            </div>
+
+            <div>
+              <strong>0.836</strong>
+              <span>Highest mean outer-fold ROC-AUC</span>
+            </div>
           </div>
           <div class="hero-model-card">
             <div class="mini-label">Highest-ranked pipeline</div>
@@ -77,201 +98,842 @@
       </div>
     </section>
 
-    <section id="overview" class="section">
-      <div class="container">
-        <div class="section-heading reveal">
-          <div class="eyebrow">Study at a glance</div>
-          <h2>Selective fusion instead of “more is always better”</h2>
+
+
+
+<section id="overview" class="section">
+  <div class="container">
+
+    <div class="section-heading reveal">
+      <div class="eyebrow">Study at a glance</div>
+
+      <h2>Selective MRI feature fusion instead of “more is always better”</h2>
+
+      <p>
+        Multiparametric MRI provides complementary information from different
+        imaging sequences, but combining all available features does not
+        necessarily lead to better machine-learning models. Radiomic datasets
+        typically contain hundreds of quantitative descriptors while being
+        limited by the number of available patients, creating a risk of
+        overfitting and unstable predictions.
+
+        This study systematically investigates whether selective integration of
+        MRI feature sources can improve classification of benign and malignant
+        breast lesions compared with individual sources and complete feature
+        concatenation.
+      </p>
+
+      <p>
+        Five MRI-derived radiomic sources were analysed independently and in
+        every possible non-empty combination, resulting in 31 source
+        configurations: five single-source datasets, ten pairwise combinations,
+        ten triple-source combinations, five quadruple-source combinations, and
+        one complete five-source dataset.
+      </p>
+    </div>
+
+
+    <div class="stats-grid reveal delay-1">
+
+      <article class="stat-card">
+        <span class="stat-icon">◫</span>
+        <strong>48</strong>
+        <p>
+          unique patients included in the final computational datasets
+        </p>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-icon">◎</span>
+        <strong>117</strong>
+        <p>
+          lesion regions of interest (ROIs) analysed in the reported
+          single-source experiments
+        </p>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-icon">∑</span>
+        <strong>144</strong>
+        <p>
+          radiomic features extracted from each MRI source before feature
+          reduction
+        </p>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-icon">⊕</span>
+        <strong>5</strong>
+        <p>
+          MRI feature sources: ADC, DCE-Pre, DCE-Post1, DCE-Post2, and T2W
+        </p>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-icon">⚙</span>
+        <strong>1,860</strong>
+        <p>
+          machine-learning pipelines evaluated across source configurations,
+          feature-selection strategies, SMOTE conditions, and classifiers
+        </p>
+      </article>
+
+    </div>
+
+
+    <section class="research-question">
+
+      <h2>Research questions</h2>
+
+      <div class="question-grid">
+
+        <article>
+          <h3>Does MRI feature fusion improve classification?</h3>
+
           <p>
-            Five MRI-derived radiomic sources were evaluated individually and in every non-empty combination.
-            The study asks whether complementary sources improve classification without allowing higher-dimensional
-            feature spaces to overwhelm a relatively small patient cohort.
+            The study evaluates whether combining complementary MRI sources
+            improves predictive performance compared with single-source models
+            and complete feature concatenation. All possible source
+            combinations were tested rather than assuming that additional
+            imaging information automatically improves classification.
           </p>
-        </div>
+        </article>
 
-        <div class="stats-grid reveal delay-1">
-          <article class="stat-card"><span class="stat-icon">◫</span><strong>48</strong><p>unique patients in the final computational datasets</p></article>
-          <article class="stat-card"><span class="stat-icon">◎</span><strong>117</strong><p>lesion ROIs in the reported single-source analysis</p></article>
-          <article class="stat-card"><span class="stat-icon">∑</span><strong>144</strong><p>radiomic features extracted per MRI source</p></article>
-          <article class="stat-card"><span class="stat-icon">⊕</span><strong>5</strong><p>feature sources: ADC, Pre, Post1, Post2, and T2W</p></article>
-        </div>
 
-<!--         <div class="note-box reveal">
-          <strong>Study-count note.</strong> The abstract describes 49 patients in the retrospective study;
-          the computational Results section reports 48 unique patients in the radiomic datasets used for model analysis.
-        </div> -->
+        <article>
+          <h3>How can reliable generalisation be achieved?</h3>
 
-        <div class="source-strip reveal">
-          <div class="source-pill adc">ADC</div>
-          <div class="source-pill">DCE-Pre</div>
-          <div class="source-pill">DCE-Post1</div>
-          <div class="source-pill">DCE-Post2</div>
-          <div class="source-pill t2">T2W</div>
-        </div>
+          <p>
+            Radiomic studies often face a mismatch between a high number of
+            extracted features and a limited number of patients. To reduce
+            optimistic performance estimates, patient-aware validation and
+            training-only preprocessing were used throughout model development.
+          </p>
+        </article>
+
+
+        <article>
+          <h3>Which machine-learning strategy performs best?</h3>
+
+          <p>
+            The study compares multiple modelling choices, including sequential
+            feature-selection strategies, automatic feature-count optimisation,
+            SMOTE-based class balancing, and ten different classifiers to
+            identify robust modelling pipelines.
+          </p>
+        </article>
+
       </div>
+
     </section>
 
-    <section id="methods" class="section alt">
-      <div class="container">
-        <div class="section-heading reveal">
-          <div class="eyebrow">Methods</div>
-          <h2>Patient-aware nested model development</h2>
-          <p>
-            Every data-dependent operation is confined to the relevant training partition. ROIs from the same
-            patient are kept together throughout cross-validation to prevent patient-level leakage.
-          </p>
+
+    <div class="source-strip reveal">
+
+      <div class="source-pill adc">ADC</div>
+      <div class="source-pill">DCE-Pre</div>
+      <div class="source-pill">DCE-Post1</div>
+      <div class="source-pill">DCE-Post2</div>
+      <div class="source-pill t2">T2W</div>
+
+    </div>
+
+  </div>
+</section>
+
+
+
+<section id="methods" class="section alt">
+  <div class="container">
+
+    <div class="section-heading reveal">
+
+      <div class="eyebrow">Methods</div>
+
+      <h2>Patient-aware nested machine-learning framework</h2>
+
+      <p>
+        The complete analysis was designed to estimate realistic model
+        generalisation while preventing information leakage. Since multiple
+        regions of interest (ROIs) could originate from the same patient,
+        all ROIs belonging to one patient were always assigned to the same
+        validation partition.
+
+        All data-dependent operations, including preprocessing, feature
+        selection, feature-count optimization, and model tuning, were
+        performed only using the corresponding training data within each
+        cross-validation loop.
+      </p>
+
+    </div>
+
+
+    <figure class="figure-card reveal">
+
+      <img src="assets/workflow.png"
+      alt="Patient-aware nested cross-validation workflow with five MRI feature sources, 31 source combinations, training-only preprocessing, feature selection, model optimization, and held-out evaluation"
+      loading="lazy" />
+
+      <figcaption>
+
+        <strong>Computational workflow.</strong>
+
+        MRI radiomic features from five imaging sources were first organized
+        into 31 possible source configurations. Each configuration was
+        evaluated using patient-aware nested cross-validation. Within each
+        training fold, preprocessing, feature selection, automatic feature
+        number selection, optional SMOTE, and classifier optimization were
+        performed before evaluation on unseen patient data.
+
+      </figcaption>
+
+    </figure>
+
+
+
+    <div class="method-grid reveal">
+
+
+      <article class="method-card">
+
+        <span>01</span>
+
+        <h3>MRI radiomic feature sources</h3>
+
+        <p>
+          Five quantitative MRI feature sources were analysed:
+          apparent diffusion coefficient (ADC), DCE pre-contrast (Pre),
+          DCE post-contrast phases (Post1 and Post2), and T2-weighted MRI
+          (T2W). Each source contained radiomic descriptors representing
+          intensity, texture, and morphological characteristics.
+        </p>
+
+      </article>
+
+
+
+      <article class="method-card">
+
+        <span>02</span>
+
+        <h3>Systematic source fusion</h3>
+
+        <p>
+          Instead of evaluating only individual modalities or complete
+          concatenation, every non-empty combination of MRI sources was tested.
+          This produced 31 datasets:
+          5 single-source, 10 pairwise, 10 triple-source,
+          5 quadruple-source, and 1 all-five-source configuration.
+        </p>
+
+      </article>
+
+
+
+      <article class="method-card">
+
+        <span>03</span>
+
+        <h3>Patient-aware nested validation</h3>
+
+        <p>
+          Model development used a nested cross-validation framework.
+          Five outer folds were used for unbiased performance estimation,
+          while three inner folds were used for feature selection,
+          hyperparameter optimization, and model development.
+          Patient-level separation was maintained in all folds.
+        </p>
+
+      </article>
+
+
+
+      <article class="method-card">
+
+        <span>04</span>
+
+        <h3>Feature reduction and selection</h3>
+
+        <p>
+          High-dimensional radiomic spaces were reduced using sequential
+          feature-selection strategies. Three approaches were compared:
+          correlation filtering followed by mRMR, Elastic Net followed by
+          mRMR, and mRMR followed by Elastic Net. The number of retained
+          features was automatically optimized within the training process.
+        </p>
+
+      </article>
+
+
+
+      <article class="method-card">
+
+        <span>05</span>
+
+        <h3>Class imbalance handling</h3>
+
+        <p>
+          Synthetic Minority Over-sampling Technique (SMOTE) was evaluated
+          as an optional training-only strategy. It was applied after feature
+          selection and standardization so that synthetic samples could not
+          influence feature selection or validation data.
+        </p>
+
+      </article>
+
+
+
+      <article class="method-card">
+
+        <span>06</span>
+
+        <h3>Classifier optimization</h3>
+
+        <p>
+          Ten machine-learning classifiers were compared, including linear
+          and nonlinear models. Classifier-specific hyperparameters were
+          optimized using Optuna with a Tree-structured Parzen Estimator
+          approach inside the inner cross-validation loop.
+        </p>
+
+      </article>
+
+
+    </div>
+
+
+
+
+    <details class="method-details reveal">
+
+      <summary>Technical details</summary>
+
+
+      <div class="details-grid">
+
+        <div>
+          <strong>Feature preprocessing</strong>
+          <span>
+            Missing-value imputation, variance filtering, redundancy removal,
+            and standardization performed within training folds
+          </span>
         </div>
 
-        <figure class="figure-card reveal">
-          <img src="assets/workflow.png" alt="Patient-aware nested cross-validation workflow with five MRI feature sources, 31 source combinations, training-only preprocessing, and held-out outer-test evaluation" loading="lazy" />
-          <figcaption>
-            <strong>Computational workflow.</strong> Five MRI radiomic feature sources generate 31 source configurations,
-            followed by patient-aware nested cross-validation, training-only preprocessing, feature selection,
-            optional SMOTE, Optuna tuning, and out-of-fold evaluation.
-          </figcaption>
-        </figure>
 
-        <div class="method-grid reveal">
-          <article class="method-card">
-            <span>01</span><h3>Feature sources</h3>
-            <p>ADC, DCE-Pre, DCE-Post1, DCE-Post2, and T2W radiomic feature tables.</p>
-          </article>
-          <article class="method-card">
-            <span>02</span><h3>31 configurations</h3>
-            <p>5 single-source, 10 pairwise, 10 triple-source, 5 quadruple-source, and 1 all-five dataset.</p>
-          </article>
-          <article class="method-card">
-            <span>03</span><h3>Nested validation</h3>
-            <p>Five patient-aware outer folds for evaluation and three patient-aware inner folds for model development.</p>
-          </article>
-          <article class="method-card">
-            <span>04</span><h3>Feature selection</h3>
-            <p>Correlation → mRMR, Elastic Net → mRMR, and mRMR → Elastic Net, with automatic feature-count optimization.</p>
-          </article>
-          <article class="method-card">
-            <span>05</span><h3>Class balancing</h3>
-            <p>SMOTE is evaluated as an optional training-only condition after feature selection and standardization.</p>
-          </article>
-          <article class="method-card">
-            <span>06</span><h3>Optimization</h3>
-            <p>Ten classifiers with classifier-specific hyperparameters optimized using Optuna/TPE in the inner loop.</p>
-          </article>
+        <div>
+          <strong>Feature redundancy control</strong>
+          <span>
+            Pearson correlation filtering with |r| &gt; 0.90 threshold
+          </span>
         </div>
 
-        <details class="method-details reveal">
-          <summary>Technical details</summary>
-          <div class="details-grid">
-            <div><strong>Feature redundancy</strong><span>|Pearson r| &gt; 0.90</span></div>
-            <div><strong>Missing values</strong><span>Training-derived median imputation</span></div>
-            <div><strong>Primary metric</strong><span>Mean outer-fold ROC-AUC</span></div>
-            <div><strong>Classification threshold</strong><span>0.5</span></div>
-            <div><strong>Uncertainty</strong><span>2,000 patient-cluster bootstrap resamples</span></div>
-            <div><strong>Software</strong><span>Python 3.13.9</span></div>
-          </div>
-        </details>
+
+        <div>
+          <strong>Primary evaluation metric</strong>
+          <span>
+            Mean outer-fold ROC-AUC
+          </span>
+        </div>
+
+
+        <div>
+          <strong>Complementary evaluation</strong>
+          <span>
+            Pooled out-of-fold ROC-AUC, PR-AUC, calibration,
+            and confusion-matrix metrics
+          </span>
+        </div>
+
+
+        <div>
+          <strong>Uncertainty estimation</strong>
+          <span>
+            2,000 patient-cluster bootstrap resamples
+          </span>
+        </div>
+
+
+        <div>
+          <strong>Implementation</strong>
+          <span>
+            Python-based machine-learning pipeline with automated
+            experiment tracking
+          </span>
+        </div>
+
+
       </div>
-    </section>
 
-    <section id="results" class="section">
-      <div class="container">
-        <div class="section-heading reveal">
-          <div class="eyebrow">Results</div>
-          <h2>The best model used three sources, not all five</h2>
-          <p>
-            The highest-ranked pipeline used ADC, Post1, and Pre features. Complete five-source fusion produced
-            lower discrimination, supporting selective integration of complementary MRI information.
-          </p>
-        </div>
+    </details>
 
-        <div class="result-highlight reveal">
-          <div class="result-number">0.836<span>± 0.088</span></div>
-          <div>
-            <h3>Mean outer-fold ROC-AUC</h3>
-            <p>ADC + Post1 + Pre · Elastic Net → mRMR · Auto-k · no SMOTE · Linear SVM</p>
-          </div>
-        </div>
 
-        <div class="figure-tabs reveal" role="tablist" aria-label="Result figures">
-          <button class="figure-tab active" data-figure="overall" role="tab" aria-selected="true">31 configurations</button>
-          <button class="figure-tab" data-figure="oof" role="tab" aria-selected="false">Best model</button>
-          <button class="figure-tab" data-figure="classifiers" role="tab" aria-selected="false">Classifier wins</button>
-          <button class="figure-tab" data-figure="smote" role="tab" aria-selected="false">SMOTE effect</button>
-        </div>
+  </div>
+</section>
 
-        <div class="figure-stage reveal">
-          <figure class="result-figure active" id="figure-overall">
-            <img src="assets/overall-performance.png" alt="Classification performance across 31 MRI radiomic source configurations" loading="lazy" data-lightbox />
-            <figcaption>
-              <strong>Performance across all source configurations.</strong> Triple-source ADC + Post1 + Pre achieved the highest mean outer-fold ROC-AUC.
-              <a href="assets/overall-performance.png" download>Download figure</a>
-            </figcaption>
-          </figure>
-          <figure class="result-figure" id="figure-oof">
-            <img src="assets/best-model-oof.png" alt="Pooled ROC, precision-recall, confusion matrix and calibration plots for the best model" loading="lazy" data-lightbox />
-            <figcaption>
-              <strong>Detailed out-of-fold performance.</strong> Pooled ROC-AUC 0.799, average precision 0.832, and Brier score 0.183.
-              <a href="assets/best-model-oof.png" download>Download figure</a>
-            </figcaption>
-          </figure>
-          <figure class="result-figure" id="figure-classifiers">
-            <img src="assets/classifier-wins.png" alt="Number of source configurations in which each classifier ranked first" loading="lazy" data-lightbox />
-            <figcaption>
-              <strong>Classifier selection across 31 configurations.</strong> RBF SVM ranked first most often, while the single best overall pipeline used Linear SVM.
-              <a href="assets/classifier-wins.png" download>Download figure</a>
-            </figcaption>
-          </figure>
-          <figure class="result-figure" id="figure-smote">
-            <img src="assets/smote-effect.png" alt="Difference in mean outer-fold ROC-AUC between SMOTE and no-SMOTE across source configurations" loading="lazy" data-lightbox />
-            <figcaption>
-              <strong>SMOTE was configuration-dependent.</strong> Its effect varied across source combinations and the best overall pipeline did not use SMOTE.
-              <a href="assets/smote-effect.png" download>Download figure</a>
-            </figcaption>
-          </figure>
-        </div>
 
-        <div class="fusion-grid reveal">
-          <article><span>Single</span><strong>Post2</strong><em>0.790 ± 0.127</em></article>
-          <article><span>Pairwise</span><strong>ADC + T2W</strong><em>0.799 ± 0.084</em></article>
-          <article class="winner"><span>Triple</span><strong>ADC + Post1 + Pre</strong><em>0.836 ± 0.088</em></article>
-          <article><span>Quadruple</span><strong>ADC + Post2 + Pre + T2W</strong><em>0.802 ± 0.096</em></article>
-          <article><span>All-five</span><strong>All five sources</strong><em>0.747 ± 0.117</em></article>
-        </div>
+
+
+
+<section id="results" class="section">
+  <div class="container">
+
+    <div class="section-heading reveal">
+
+      <div class="eyebrow">Results</div>
+
+      <h2>Selective fusion outperformed complete MRI feature concatenation</h2>
+
+      <p>
+        Across all 31 MRI source configurations and thousands of machine-learning
+        pipelines, the highest-performing model was not obtained by combining
+        every available MRI sequence. Instead, a selective triple-source
+        representation combining ADC, DCE-Post1, and DCE-Pre radiomic features
+        achieved the strongest discrimination.
+
+        This finding suggests that adding more feature sources can introduce
+        additional variability and redundant information, while carefully
+        selected complementary sources may provide a more robust representation
+        for classification.
+      </p>
+
+    </div>
+
+
+
+    <div class="result-highlight reveal">
+
+      <div class="result-number">
+        0.836
+        <span>± 0.088</span>
       </div>
-    </section>
 
-    <section id="explainability" class="section alt">
-      <div class="container">
-        <div class="section-heading reveal">
-          <div class="eyebrow">Explainability</div>
-          <h2>Feature stability + SHAP</h2>
-          <p>
-            The interpretation analysis separates two questions: which features recur across outer folds, and how
-            strongly recurrent features influence the fitted interpretation model.
-          </p>
-        </div>
+      <div>
 
-        <div class="xai-layout reveal">
-          <div class="xai-copy">
-            <div class="xai-stat"><strong>28</strong><span>unique features selected at least once</span></div>
-            <div class="xai-stat"><strong>13</strong><span>features recurrent in at least two outer folds</span></div>
-            <p>
-              The strongest signals were dominated by ADC-derived first-order intensity descriptors together with
-              Post1-DCE intensity, morphology, and texture features. ADC intensity-histogram median features showed
-              particularly high recurrence and SHAP importance.
-            </p>
-            <div class="note-box compact">
-              SHAP describes model behavior and feature contribution; it does not establish biological causality.
-            </div>
-          </div>
-          <figure class="figure-card clean">
-            <img src="assets/feature-stability-shap.png" alt="Feature-selection recurrence, global SHAP importance and SHAP summary for the highest-ranked model" loading="lazy" data-lightbox />
-            <figcaption>
-              Recurrence across outer folds, mean absolute SHAP importance, and direction of feature contributions.
-            </figcaption>
-          </figure>
-        </div>
+        <h3>Highest mean outer-fold ROC-AUC</h3>
+
+        <p>
+          ADC + Post1 + Pre
+          <br>
+          Elastic Net → mRMR
+          <br>
+          Automatic feature-count selection
+          <br>
+          No SMOTE
+          <br>
+          Linear SVM classifier
+        </p>
+
       </div>
-    </section>
+
+    </div>
+
+
+
+    <div class="result-summary-grid reveal">
+
+      <article>
+
+        <h3>Model evaluation</h3>
+
+        <p>
+          Performance ranking was based on mean ROC-AUC across five
+          patient-aware outer cross-validation folds. Final evaluation used
+          unseen patient data through pooled out-of-fold predictions.
+        </p>
+
+      </article>
+
+
+      <article>
+
+        <h3>Generalisation performance</h3>
+
+        <p>
+          The selected model achieved a pooled ROC-AUC of 0.799,
+          pooled PR-AUC of 0.832, and Brier score of 0.183,
+          providing complementary discrimination and calibration measures.
+        </p>
+
+      </article>
+
+
+      <article>
+
+        <h3>Fusion level comparison</h3>
+
+        <p>
+          The best performance occurred at the triple-source level.
+          Increasing the number of MRI sources beyond this point did not
+          improve discrimination.
+        </p>
+
+      </article>
+
+
+    </div>
+
+
+
+    <div class="figure-tabs reveal" role="tablist" aria-label="Result figures">
+
+
+      <button class="figure-tab"
+      data-figure="oof"
+      role="tab"
+      aria-selected="false">
+      Best model
+      </button>
+
+
+      <button class="figure-tab active"
+      data-figure="overall"
+      role="tab"
+      aria-selected="true">
+      31 configurations
+      </button>
+
+
+
+      <button class="figure-tab"
+      data-figure="classifiers"
+      role="tab"
+      aria-selected="false">
+      Classifier comparison
+      </button>
+
+
+      <button class="figure-tab"
+      data-figure="smote"
+      role="tab"
+      aria-selected="false">
+      SMOTE analysis
+      </button>
+
+    </div>
+
+
+
+
+    <div class="figure-stage reveal">
+
+      <figure class="result-figure" id="figure-oof">
+
+        <img src="assets/best-model-oof.png"
+        alt="Pooled ROC, precision-recall, confusion matrix and calibration plots for the best model"
+        loading="lazy"
+        data-lightbox />
+
+        <figcaption>
+
+          <strong>
+          Detailed evaluation of the highest-ranked pipeline.
+          </strong>
+
+          Out-of-fold analysis showed pooled ROC-AUC of 0.799,
+          average precision of 0.832, and Brier score of 0.183,
+          providing a complete assessment of discrimination and calibration.
+
+          <a href="assets/best-model-oof.png" download>
+          Download figure
+          </a>
+
+        </figcaption>
+
+      </figure>
+
+
+
+      <figure class="result-figure active" id="figure-overall">
+
+        <img src="assets/overall-performance.png"
+        alt="Classification performance across 31 MRI radiomic source configurations"
+        loading="lazy"
+        data-lightbox />
+
+        <figcaption>
+
+          <strong>
+          Performance across all MRI source configurations.
+          </strong>
+
+          All 31 source combinations were compared using the same
+          patient-aware evaluation framework. The ADC + Post1 + Pre
+          triple-source configuration achieved the highest mean outer-fold
+          ROC-AUC.
+
+          <a href="assets/overall-performance.png" download>
+          Download figure
+          </a>
+
+        </figcaption>
+
+      </figure>
+
+
+
+
+
+      <figure class="result-figure" id="figure-classifiers">
+
+        <img src="assets/classifier-wins.png"
+        alt="Number of source configurations in which each classifier ranked first"
+        loading="lazy"
+        data-lightbox />
+
+        <figcaption>
+
+          <strong>
+          Classifier performance across source configurations.
+          </strong>
+
+          Different classifiers performed best depending on the MRI
+          configuration. Although RBF SVM achieved the highest number of
+          configuration-level wins, the single best-performing pipeline used
+          Linear SVM with the ADC + Post1 + Pre feature representation.
+
+          <a href="assets/classifier-wins.png" download>
+          Download figure
+          </a>
+
+        </figcaption>
+
+      </figure>
+
+
+
+
+      <figure class="result-figure" id="figure-smote">
+
+        <img src="assets/smote-effect.png"
+        alt="Difference in mean outer-fold ROC-AUC between SMOTE and no-SMOTE across source configurations"
+        loading="lazy"
+        data-lightbox />
+
+        <figcaption>
+
+          <strong>
+          Effect of synthetic oversampling.
+          </strong>
+
+          SMOTE did not provide a universal improvement. Its effect depended
+          on the MRI feature configuration, and the highest-ranked model was
+          obtained without SMOTE.
+
+          <a href="assets/smote-effect.png" download>
+          Download figure
+          </a>
+
+        </figcaption>
+
+      </figure>
+
+
+    </div>
+
+
+
+
+    <h3 class="fusion-title reveal">
+      Best-performing configuration at each fusion level
+    </h3>
+
+
+
+    <div class="fusion-grid reveal">
+
+      <article>
+        <span>Single-source</span>
+        <strong>Post2</strong>
+        <em>0.790 ± 0.127</em>
+      </article>
+
+
+      <article>
+        <span>Pairwise</span>
+        <strong>ADC + T2W</strong>
+        <em>0.799 ± 0.084</em>
+      </article>
+
+
+      <article class="winner">
+
+        <span>Triple-source</span>
+
+        <strong>
+        ADC + Post1 + Pre
+        </strong>
+
+        <em>
+        0.836 ± 0.088
+        </em>
+
+      </article>
+
+
+      <article>
+
+        <span>Quadruple-source</span>
+
+        <strong>
+        ADC + Post2 + Pre + T2W
+        </strong>
+
+        <em>
+        0.802 ± 0.096
+        </em>
+
+      </article>
+
+
+      <article>
+
+        <span>All-five-source</span>
+
+        <strong>
+        ADC + Pre + Post1 + Post2 + T2W
+        </strong>
+
+        <em>
+        0.747 ± 0.117
+        </em>
+
+      </article>
+
+
+    </div>
+
+
+  </div>
+</section>
+
+
+
+
+
+<section id="explainability" class="section alt">
+  <div class="container">
+
+    <div class="section-heading reveal">
+
+      <div class="eyebrow">Explainability</div>
+
+      <h2>Understanding model decisions through feature stability and SHAP</h2>
+
+      <p>
+        Radiomic models can achieve strong predictive performance while relying
+        on large numbers of quantitative image features. To improve
+        interpretability and assess whether the learned patterns were reliable,
+        the highest-ranked model was analysed using two complementary
+        approaches: feature-selection stability across validation folds and
+        SHAP-based model interpretation.
+
+        Feature stability evaluates whether the same features are repeatedly
+        selected when the model is trained on different patient subsets, while
+        SHAP analysis estimates how individual features contribute to model
+        predictions.
+      </p>
+
+    </div>
+
+
+
+    <div class="xai-layout reveal">
+
+      <div class="xai-copy">
+
+
+        <div class="xai-stat">
+          <strong>28</strong>
+          <span>
+            unique features selected at least once across outer folds
+          </span>
+        </div>
+
+
+        <div class="xai-stat">
+          <strong>13</strong>
+          <span>
+            features repeatedly selected in at least two outer folds
+          </span>
+        </div>
+
+
+
+        <p>
+          The selected features were mainly derived from ADC and DCE-Post1
+          radiomic sources. ADC first-order intensity descriptors showed high
+          recurrence across folds and strong SHAP importance, indicating that
+          diffusion-related intensity patterns contributed substantially to
+          model predictions.
+
+          Additional influential features included DCE-Post1 intensity,
+          morphological characteristics, and texture descriptors, suggesting
+          that complementary information from diffusion and contrast-enhanced
+          MRI contributed to the final classification model.
+        </p>
+
+
+
+        <div class="xai-insight">
+
+          <h3>Why feature stability matters</h3>
+
+          <p>
+            In high-dimensional radiomic datasets, a model may select different
+            features depending on small changes in the training data. Features
+            that repeatedly appear across independent patient splits provide
+            stronger evidence of consistent model behaviour.
+          </p>
+
+        </div>
+
+
+
+        <div class="note-box compact">
+
+          SHAP explains how features influence model predictions within the
+          trained model. These explanations describe computational model
+          behaviour and should not be interpreted as evidence of biological
+          causation.
+
+        </div>
+
+
+      </div>
+
+
+
+
+      <figure class="figure-card clean">
+
+        <img src="assets/feature-stability-shap.png"
+        alt="Feature-selection recurrence, global SHAP importance and SHAP summary for the highest-ranked model"
+        loading="lazy"
+        data-lightbox />
+
+
+        <figcaption>
+
+          <strong>
+          Feature stability and model interpretation.
+          </strong>
+
+          The figure combines recurrence of selected features across outer
+          folds, mean absolute SHAP importance, and SHAP summary values showing
+          the direction and magnitude of feature contributions.
+
+        </figcaption>
+
+
+      </figure>
+
+
+    </div>
+
+  </div>
+</section>
+
+
 
     <section id="publication" class="section publication-section">
       <div class="container">
